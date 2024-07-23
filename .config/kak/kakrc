@@ -1,0 +1,183 @@
+# big love for this blog page its actually amazing
+# https://blog.trinket.icu/articles/writing-your-first-kakrc
+
+# woah linus youre actually right LMAO
+set-option global tabstop 8
+set-option global indentwidth 8
+set-option global scrolloff 0,3
+
+add-highlighter global/ number-lines -hlcursor -relative
+add-highlighter global/ show-matching
+add-highlighter global/ regex \h+$ 0:Error
+
+hook global InsertCompletionShow .* %{
+        try %{
+                execute-keys -draft 'h<a-K>\h<ret>'
+                map window insert <tab> <c-n>
+                map window insert <s-tab> <c-p>
+                hook -once -always window InsertCompletionHide .* %{
+                        unmap window insert <tab> <c-n>
+                        unmap window insert <s-tab> <c-p>
+                }
+        }
+}
+
+hook global InsertChar k %{
+        try %{
+                  exec -draft hH <a-k>jk<ret> d
+                  exec <esc>
+        }
+}
+
+define-command -docstring 'Update luau lsp files' -params 0 luau-lsp-update-files %{
+          eval %sh{
+                    INSTALL_DIRECTORY="$HOME/.local/share/kak/luau-lsp"
+
+                    if [ ! -d "$INSTALL_DIRECTORY" ]; then
+                              mkdir -p $INSTALL_DIRECTORY
+                    fi
+
+                    curl -o $INSTALL_DIRECTORY/globalTypes.d.luau https://raw.githubusercontent.com/JohnnyMorganz/luau-lsp/main/scripts/globalTypes.d.luau
+                    curl -o $INSTALL_DIRECTORY/api-docs.json https://raw.githubusercontent.com/MaximumADHD/Roblox-Client-Tracker/roblox/api-docs/en-us.json
+                    lune setup
+          }
+}
+
+define-command -docstring "save and quit" x "write-all; quit"
+
+map global normal <esc> ";,"
+map -docstring 'delete to end of line' global normal D '<a-l>d'
+map -docstring 'comment line' global user c ':comment-line<ret>'
+
+# u can paste with C-S-v
+map -docstring 'copy to system clipboard' global user y '<a-|>clip.exe<ret>'
+map -docstring 'lsp user mode' global user l ':enter-user-mode lsp<ret>'
+map -docstring 'search through buffers' global user b ':buffer '
+
+declare-user-mode window
+map -docstring 'enter window mode' global normal <c-w> ':enter-user-mode window<ret>'
+map -docstring 'split vertical split' global window v ":tmux-terminal-vertical kak -c %val{session} %arg{@}<ret>"
+map -docstring 'split horizontal split' global window h ":tmux-terminal-horizontal kak -c %val{session} %arg{@}<ret>"
+
+declare-user-mode git
+map -docstring 'enter git mode' global user g ':enter-user-mode git<ret>'
+map -docstring 'git add' global git a ':git add '
+map -docstring 'git status' global git s ':git status<ret>'
+
+set-option global grepcmd 'rg --vimgrep'
+
+define-command find-file -docstring "find files" -params 1 %{ edit %arg{1} }
+complete-command find-file shell-script-candidates %{ fd . --type f }
+
+define-command grep-buffer -docstring "grep command but for the current buffer" -params 1 %{ grep %arg{1}  %val{buffile} }
+
+declare-user-mode find
+map -docstring 'enter find mode' global user f ':enter-user-mode find<ret>'
+map -docstring 'fuzzy search files' global find f ':find-file '
+map -docstring 'project grep' global find g ':grep '
+map -docstring 'buffer grep' global find b ':grep-buffer '
+
+# automatic git diff flag
+hook global WinCreate .* %{ git show-diff }
+hook global BufWritePost .* %{ git update-diff }
+
+eval %sh{
+        if [[ ! -d ~/dotfiles/.config/kak/bundle/kak-bundle ]]; then
+                mkdir -p ~/dotfiles/.config/kak/bundle/kak-bundle
+                git clone https://github.com/jdugan6240/kak-bundle ~/dotfiles/.config/kak/bundle/kak-bundle
+        fi
+}
+
+source "~/dotfiles/.config/kak/bundle/kak-bundle/rc/kak-bundle.kak"
+bundle-noload kak-bundle https://github.com/jdugan6240/kak-bundle
+
+bundle byline.kak https://github.com/evanrelf/byline.kak %{
+        require-module "byline"
+}
+
+bundle kakoune-phantom-selection https://github.com/occivink/kakoune-phantom-selection %{
+        map global normal =     ": phantom-selection-add-selection<ret>"
+        map global normal +     ": phantom-selection-select-all; phantom-selection-clear<ret>"
+        map global normal <c-n> ": phantom-selection-iterate-next<ret>"
+        map global normal <c-p> ": phantom-selection-iterate-prev<ret>"
+
+        map global insert <c-n> "<esc>: phantom-selection-iterate-next<ret>i"
+        map global insert <c-p> "<esc>: phantom-selection-iterate-prev<ret>i"
+}
+
+bundle kakoune-snippets https://github.com/occivink/kakoune-snippets %{
+        set-option global snippets_auto_expand true
+
+        hook global WinSetOption filetype=(luau) %{
+                source '~/dotfiles/.config/kak/snippets/luau.kak'
+        }
+}
+
+bundle kak-lsp https://github.com/kak-lsp/kak-lsp %{
+        hook global WinSetOption filetype=(luau) %{ lsp-enable-window
+                # yeah youre better off just doing this in a script
+                set-option window formatcmd "stylua %val{buffile} --stdin-filepath=%val{buffile} -"
+                set-option buffer lintcmd %{ selene --color="never" --display-style="quiet" }
+                set-option buffer comment_line "--"
+
+                hook buffer BufWritePost .* %{ lint }
+        }
+
+        hook global KakEnd .* lsp-exit
+}
+
+bundle-install-hook kak-lsp %{
+        cargo install --locked --force --path .
+}
+
+bundle-customload kak-tree-sitter https://git.sr.ht/~hadronized/kak-tree-sitter %{
+        eval %sh{ kak-tree-sitter -dks --with-highlighting --with-text-objects --init $kak_session -vvvvv }
+
+        hook global BufCreate .*.luau %{
+                set-option buffer filetype luau
+                set-option buffer tree_sitter_lang luau
+        }
+
+        hook global BufCreate .*.toml %{
+                set-option buffer filetype toml
+                set-option buffer tree_sitter_lang toml
+        }
+
+        colorscheme catppuccin-macchiato
+}
+
+bundle-install-hook kak-tree-sitter %{
+        cargo install --locked --force --path ./kak-tree-sitter
+        cargo install --locked --force --path ./ktsctl
+}
+
+bundle kakoune-surround https://github.com/h-youhei/kakoune-surround %{
+        declare-user-mode surround
+        map global surround s ':surround<ret>' -docstring 'surround'
+        map global surround c ':change-surround<ret>' -docstring 'change'
+        map global surround d ':delete-surround<ret>' -docstring 'delete'
+        map global surround t ':select-surrounding-tag<ret>' -docstring 'select tag'
+        map -docstring 'enter surround mode' global user s ':enter-user-mode surround<ret>'
+        map global insert <c-s> '<a-;>:enter-user-mode surround<ret>'
+}
+
+bundle kak-harpoon https://github.com/raiguard/kak-harpoon %{
+        harpoon-add-bindings
+}
+
+bundle-customload hop.kak https://git.sr.ht/~hadronized/hop.kak %{
+	evaluate-commands %sh{ hop-kak --init }
+
+	declare-option str hop_kak_keyset 'asdfjkl;'
+
+	define-command hop-kak %{
+		evaluate-commands -draft %{
+			execute-keys 'gtGbxs'
+			evaluate-commands -no-hooks -client "%val{client}" -- %sh{ hop-kak --keyset "$kak_opt_hop_kak_keyset" --sels "$kak_selections_desc" }
+		}
+        }
+}
+
+bundle-install-hook hop.kak %{
+        cargo install --locked --force --path .
+}

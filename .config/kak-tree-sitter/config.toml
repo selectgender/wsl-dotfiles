@@ -1,0 +1,20 @@
+# luau
+[language.luau.grammar.source.git]
+url = "https://github.com/tree-sitter-grammars/tree-sitter-luau"
+pin = "5b088fac748f2666a315cafd1638a214388eb23e"
+
+[language.luau.grammar]
+path = "src"
+compile = "cc"
+compile_args = ["-c", "-fpic", "../scanner.c", "../parser.c", "-I", ".."]
+compile_flags = ["-O3"]
+link = "cc"
+link_args = ["-shared", "-fpic", "scanner.o", "parser.o", "-o", "luau.so"]
+link_flags = ["-O3"]
+
+[language.luau.queries.source.git]
+url = "https://github.com/tree-sitter-grammars/tree-sitter-luau"
+pin = "5b088fac748f2666a315cafd1638a214388eb23e"
+
+[language.luau.queries]
+path = "queries"
