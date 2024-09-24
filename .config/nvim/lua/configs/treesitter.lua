@@ -14,6 +14,8 @@ treesitter.opts = {
 		"markdown_inline",
 
 		"typst",
+
+		"cpp",
 	},
 
 	highlight = {

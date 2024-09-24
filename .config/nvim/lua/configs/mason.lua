@@ -5,7 +5,10 @@ mason.opts = {
 		"lua-language-server",
 		"stylua",
 		"selene",
+
 		"tinymist",
+
+		"clangd",
 	},
 	-- not an option from mason.nvim
 	PATH = "skip",

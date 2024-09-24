@@ -73,7 +73,6 @@ set-face global Whitespace         "%opt{overlay1},%opt{base}+f"
 set-face global WrapMarker         Whitespace
 set-face global BufferPadding      "%opt{base},%opt{base}"
 
-
 # Code
 set-face global value         "%opt{peach}"
 set-face global type          "%opt{yellow}"
@@ -89,7 +88,7 @@ set-face global documentation comment
 set-face global meta          "%opt{yellow}"
 set-face global builtin       "%opt{red}"
 
-# Tree-sitter (<https://git.sr.ht/~hadronized/kak-tree-sitter>)
+# Tree-sitter (<https://github.com/hadronized/kak-tree-sitter>)
 # Copied from catppuccin_macchiato.kak
 # Adjusted with https://github.com/catppuccin/catppuccin/blob/main/docs/style-guide.md
 set-face global ts_attribute                    attribute
@@ -116,6 +115,10 @@ set-face global ts_keyword_control_conditional  "%opt{mauve}+i"
 set-face global ts_keyword_control_directive    "%opt{mauve}+i"
 set-face global ts_keyword_control_import       "%opt{mauve}+i"
 set-face global ts_keyword_directive            "%opt{mauve}+i"
+set-face global ts_keyword_storage              "%opt{mauve}"
+set-face global ts_keyword_storage_modifier     "%opt{mauve}"
+set-face global ts_keyword_storage_modifier_mut "%opt{mauve}"
+set-face global ts_keyword_storage_modifier_ref "%opt{teal}"
 set-face global ts_label                        "%opt{sky}+i"
 set-face global ts_markup_bold                  "%opt{peach}+b"
 set-face global ts_markup_heading               "%opt{red}"

@@ -3,7 +3,7 @@ local nvim_lint = {}
 nvim_lint.config = function()
 	require("lint").linters_by_ft = {
 		lua = { "selene" },
-		luau = { "selene" }
+		luau = { "selene" },
 	}
 
 	vim.api.nvim_create_autocmd({ "BufWritePost" }, {

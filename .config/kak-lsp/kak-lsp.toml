@@ -8,6 +8,14 @@ verbosity = 2
 # set to 0 to disable
 timeout = 1800 # seconds = 30 minutes
 
+[language_ids]
+c = "c_cpp"
+cpp = "c_cpp"
+javascript = "javascriptreact"
+typescript = "typescriptreact"
+protobuf = "proto"
+sh = "shellscript"
+
 # Semantic tokens support
 # See https://microsoft.github.io/language-server-protocol/specifications/specification-current/#textDocument_semanticTokens
 # for the default list of tokens and modifiers.
@@ -33,7 +41,7 @@ faces = [
 
 [language_server.luau-lsp]
 filetypes = ["luau"]
-roots = ["aftman.toml", "default.project.json"]
+roots = ["rokit.toml", "default.project.json"]
 command = "luau-lsp"
 args = [
   "lsp",
@@ -50,7 +58,7 @@ formatOnSave = true
 [language_server.luau-lsp.settings.luau-lsp.completion.imports]
 enabled = true
 suggestServices = true
-suggestRequires = false
+suggestRequires = true
 
 [language_server.typescript-language-server]
 filetypes = ["javascript", "typescript"]

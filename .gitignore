@@ -1,2 +1,10 @@
 .config/tmux/plugins/
+
 .config/kak/bundle
+
+.config/emacs/auto-save-list/
+.config/emacs/eln-cache/
+.config/emacs/elpaca/
+.config/emacs/projects
+
+.config/nushell/history.txt

@@ -27,10 +27,26 @@ local map = vim.keymap.set
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
-o.laststatus = 3
+-- o.laststatus = 3
+
+-- gets rid of the statusline
+o.statusline = "%="
 o.showmode = false
 
-o.clipboard = "unnamedplus"
+o.clipboard = "unnamed"
+g.clipboard = {
+	name = "WslClipboard",
+	copy = {
+		["+"] = "clip.exe",
+		["*"] = "clip.exe",
+	},
+	paste = {
+		["+"] = 'powershell.exe -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace("`r", ""))',
+		["*"] = 'powershell.exe -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace("`r", ""))',
+	},
+	cache_enabled = 0,
+}
+
 o.cursorline = true
 o.cursorlineopt = "number"
 
@@ -49,6 +65,7 @@ o.shiftwidth = 8
 o.smartindent = true
 o.tabstop = 8
 o.softtabstop = 8
+o.colorcolumn = "80"
 
 o.ignorecase = true
 o.smartcase = true
@@ -140,7 +157,8 @@ require("lazy").setup({
 		opts = function()
 			return require("configs.catppuccin").opts
 		end,
-		config = function()
+		config = function(_, opts)
+			require("catppuccin").setup(opts)
 			vim.cmd.colorscheme("catppuccin")
 		end,
 	},

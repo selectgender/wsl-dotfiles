@@ -8,9 +8,13 @@ snippet f
 	function ${1}(${2})
 		${0}
 	end
-snippet i
+snippet fi
 	for ${1:i} = ${2:0}, ${3:10} do
 		${0}
+	end
+snippet i
+	if $1 then
+		$0
 	end
 snippet w
 	while ${1} do
@@ -22,3 +26,9 @@ snippet M
 	${0}
 
 	return ${1}
+snippet C
+	--[[
+		`!lua vim.fn.expand('%:t')`
+
+		$0
+	]]
