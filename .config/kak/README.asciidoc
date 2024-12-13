@@ -1,0 +1,16 @@
+= kakoune
+
+the kakoune configuration of a crazy witch
+
+= why kakoune?
+
+. emacs is cool, just too big
+. vim is cool, i just like kakoune multicursor better
+. configuration style is, mwah, chef's kiss beautiful
+
+= sensibilities
+
+. insert mode snippets are fucking FAST and SEXY
+. jump mode is fucking FAST and SEXY
+. lsp is... SEXY... but slow,,, as fuck
+. treesitter is SEXY.... but i dont need fancy highlighting

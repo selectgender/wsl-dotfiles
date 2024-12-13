@@ -7,4 +7,6 @@
 .config/emacs/elpaca/
 .config/emacs/projects
 
+.config/helix/runtime
+
 .config/nushell/history.txt

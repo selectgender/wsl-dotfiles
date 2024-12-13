@@ -1,0 +1,10 @@
+layout {
+	pane {
+		command "rojo"
+		args "serve"
+        }
+	pane {
+		command "rojo"
+		args "sourcemap" "default.project.json" "-o" "sourcemap.json" "--watch"
+        }
+}

@@ -1,235 +1,137 @@
-add-highlighter global/ number-lines -hlcursor -relative -separator "  "
+colorscheme catppuccin-mocha
+
+add-highlighter global/ number-lines -hlcursor -relative -separator " "
 add-highlighter global/ show-matching
 add-highlighter global/column-limit column 80 default,black+d
 
-# highlights trailing whitespace
+# highlight trailing whitespace
 add-highlighter global/ regex \h+$ 0:Error
 
+# using this just for indents since i keep near religious track of them
+add-highlighter global/ show-whitespaces -spc ' ' -lf ' '
+
 set-option global tabstop 8
-set-option global indentwidth 8
+set-option global indentwidth 0
 set-option global scrolloff 0,3
 
-# set-option global ui_options terminal_assistant=none
-set-option global ui_options terminal_assistant=cat
-
-# automatic git diff flag
-add-highlighter global/git-diff flag-lines Default git_diff_flags
-
-hook global -group git-main-hook BufCreate .* %{
-  # Update git diff column signs
-  try %{ git show-diff }
-}
-
-hook global -group git-main-hook FocusIn .* %{
-  # Update git diff column signs
-  try %{ git update-diff }
-}
-
-hook global -group git-main-hook BufReload .* %{
-  # Update git diff column signs
-  try %{ git update-diff }
-}
-
-hook global -group git-main-hook BufWritePost .* %{
-  # Update git diff column signs
-  try %{ git update-diff }
-}
+set-option -add global ui_options terminal_status_on_top=true
+set-option -add global ui_options terminal_assistant=none
 
 # jk to escape
 hook global InsertChar k %{
 	try %{
 		exec -draft hH <a-k>jk<ret> d
 		exec <esc>
-    	}
+	}
 }
-
 # tab 4 completion window
 hook global InsertCompletionShow .* %{
 	try %{
-    		execute-keys -draft 'h<a-K>\h<ret>'
+		execute-keys -draft 'h<a-K>\h<ret>'
 
-    		map window insert <tab> <c-n>
-    		map window insert <s-tab> <c-p>
+		map window insert <tab> <c-n>
+		map window insert <s-tab> <c-p>
 
-    		hook -once -always window InsertCompletionHide .* %{
-        		unmap window insert <tab> <c-n>
-        		unmap window insert <s-tab> <c-p>
-    		}
+		hook -once -always window InsertCompletionHide .* %{
+			unmap window insert <tab> <c-n>
+			unmap window insert <s-tab> <c-p>
+		}
 	}
 }
 
-# more sensible keybinds
+# choosing which standard library stuff I want
+nop %sh{
+	# just checks if the symlink already exists and then symlinks it
+	rc_import() {
+		[ ! -e $kak_config/autoload/$2 ] && ln -s "$kak_runtime/rc/$1" "$kak_config/autoload/$2"
+	}
+
+	rc_import "windowing/zellij.kak" "zellij.kak"
+
+	rc_import "tools/comment.kak" "comment.kak"
+	rc_import "tools/git.kak" "git.kak"
+	# for some reason the symlink process for this is just satanic and cursed,,, so i decided to comment it out
+	# rc_import "tools/fifo.kak" "fifo.kak"
+	rc_import "tools/grep.kak" "grep.kak"
+	rc_import "tools/jump.kak" "jump.kak"
+	rc_import "tools/format.kak" "format.kak"
+	rc_import "tools/lint.kak" "lint.kak"
+
+	rc_import "detection/file.kak" "file.kak"
+
+	rc_import "filetype/sh.kak" "sh.kak"
+	rc_import "filetype/kakrc.kak" "kakrc.kak"
+	rc_import "filetype/lua.kak" "lua.kak"
+	rc_import "filetype/asciidoc.kak" "asciidoc.kak"
+	rc_import "filetype/odin.kak" "odin.kak"
+}
+
+require-module zellij
+require-module grep
+
+# vim reflexes
 map global insert <c-w> '<esc>:execute-keys bd<ret>i'
+
+# i swap when i use the alt keybind more than the shift one
+map global normal <s-n> "<a-n>"
+map global normal <a-n> "<s-n>"
+
+map global normal S "<a-s>"
+map global normal <a-s> "S"
+
+map global normal ? '<a-/>'
+map global normal <a-/> '?'
+
+map global normal F "<a-f>"
+map global normal <a-f> "F"
 
 map global normal <esc> ";,"
 map global normal , "<a-i>"
 map global normal . "<a-a>"
-map global normal ';' ";,"
 map global normal "'" "<a-;>"
 
-map -docstring 'delete to end of line' global normal D '<a-l>d'
+map global normal m "<c-d>"
+map global normal M "<c-u>"
 
+# jump mode highlights are set in colorscheme file
+map global normal e ':enter_jump_mode_with_replace_select_mode<ret>'
+map global normal E ':enter_jump_mode_with_extend_select_mode<ret>'
+map global normal <a-e> ':enter_jump_mode_with_append_select_mode<ret>'
+
+# for wsl
 map -docstring 'copy to system clipboard' global user y '<a-|>clip.exe<ret>'
-map -docstring 'search through buffers' global user b ':buffer '
 map -docstring 'comment line' global user c ':comment-line<ret>'
 
-map -docstring 'lazygit' global user g ':tmux-terminal-window lazygit<ret>'
+map -docstring 'open yazi (filetree)' global user t ':zellij-action new-pane -fc -- yazi<ret>'
+
+set-option global grepcmd 'rg --column --smart-case --sort path --vimgrep'
+complete-command edit shell-script-candidates %{ fd . --type f }
+
+map -docstring 'find files' global user f ':edit '
+map -docstring 'global search/grep' global user s ':grep '
 
 declare-user-mode window
 map -docstring 'enter window mode' global user w ':enter-user-mode window<ret>'
-map -docstring 'vertical split' global window v ":tmux-terminal-vertical kak -c %val{session} %arg{@}<ret>"
-map -docstring 'horizontal split' global window h ":tmux-terminal-horizontal kak -c %val{session} %arg{@}<ret>"
+map -docstring 'split vertical' global window s ':zellij-action new-pane -cd down -- kak -c %val{session} -e "%arg{@}"<ret>'
+map -docstring 'split horizontal' global window v ':zellij-action new-pane -cd left -- kak -c %val{session} -e "%arg{@}"<ret>'
+map -docstring 'focus left' global window h ':zellij-action move-focus left<ret>'
+map -docstring 'focus down' global window j ':zellij-action move-focus down<ret>'
+map -docstring 'focus up' global window k ':zellij-action move-focus up<ret>'
+map -docstring 'focus right' global window l ':zellij-action move-focus right<ret>'
 
-declare-user-mode filetree
-map -docstring 'enter filetree mode' global user t ':enter-user-mode filetree<ret>'
-map -docstring 'vertical split' global filetree v ":tmux-terminal-vertical yazi<ret>"
-map -docstring 'horizontal split' global filetree h ":tmux-terminal-horizontal yazi<ret>"
-map -docstring 'window' global filetree w ":tmux-terminal-window yazi<ret>"
+declare-user-mode buffer
+map -docstring 'enter buffer mode' global user b ':enter-user-mode buffer<ret>'
+map -docstring 'next buffer' global buffer n ':buffer-next<ret>'
+map -docstring 'next buffer' global buffer p ':buffer-previous<ret>'
+map -docstring 'buffer search' global buffer s ':buffer '
+map -docstring 'delete buffer' global buffer d ':delete-buffer<ret>'
 
-declare-user-mode find
+declare-user-mode git
+map -docstring 'enter git mode' global user g ':enter-user-mode git<ret>'
+map -docstring 'git add' global git a ':git add '
+map -docstring 'git add all' global git A ':git add -A<ret>'
+map -docstring 'git status' global git s ':git status<ret>'
+map -docstring 'git reset' global git r ':git reset<ret>'
+map -docstring 'git commit' global git c ':git commit '
+map -docstring 'git checkout' global git C ':git checkout '
 
-set-option global grepcmd 'rg --column --smart-case --sort path --vimgrep'
-
-define-command find-file -docstring "find files" -params 1 %{ edit %arg{1} }
-complete-command find-file shell-script-candidates %{ fd . --type f }
-
-define-command file-grep -docstring "search file" -params 1 %{ grep %arg{1} %val{buffile} }
-
-map -docstring 'enter find mode' global user f ':enter-user-mode find<ret>'
-map -docstring 'find files' global find f ':find-file '
-map -docstring 'global grep' global find g ':grep '
-map -docstring 'file search' global find s ':file-grep '
-
-# custom filetypes!
-hook global BufCreate .*.luau %{ set-option buffer filetype luau }
-hook global BufCreate .*.nu %{ set-option buffer filetype nu }
-
-eval %sh{
-        if [[ ! -d ~/dotfiles/.config/kak/bundle/kak-bundle ]]; then
-                mkdir -p ~/dotfiles/.config/kak/bundle/kak-bundle
-                git clone https://github.com/jdugan6240/kak-bundle ~/dotfiles/.config/kak/bundle/kak-bundle
-        fi
-}
-
-source "~/dotfiles/.config/kak/bundle/kak-bundle/rc/kak-bundle.kak"
-bundle-noload kak-bundle https://github.com/jdugan6240/kak-bundle
-
-# it just feels right
-bundle byline.kak https://github.com/evanrelf/byline.kak %{
-        require-module "byline"
-}
-
-# switch files fast!
-bundle kak-harpoon https://github.com/raiguard/kak-harpoon %{
-        harpoon-add-bindings
-}
-
-# sometimes arbitrary cursor placements can be really useful
-# also snippets
-bundle kakoune-phantom-selection https://github.com/occivink/kakoune-phantom-selection %{
-        map global normal =     ": phantom-selection-add-selection<ret>"
-        map global normal +     ": phantom-selection-select-all; phantom-selection-clear<ret>"
-        map global normal <c-n> ": phantom-selection-iterate-next<ret>"
-        map global normal <c-p> ": phantom-selection-iterate-prev<ret>"
-
-        map global insert <c-n> "<esc>: phantom-selection-iterate-next<ret>i"
-        map global insert <c-p> "<esc>: phantom-selection-iterate-prev<ret>i"
-}
-
-# SPEED.
-bundle kakoune-snippets https://github.com/occivink/kakoune-snippets %{
-        # most snippets will be prefixed by ,
-        # extremely fast when you can do snippets in insert mode
-        set-option global snippets_auto_expand true
-
-        hook global WinSetOption filetype=(luau) %{
-                source '~/dotfiles/.config/kak/snippets/luau.kak'
-        }
-}
-
-# eye candy ^-^
-bundle-customload kak-tree-sitter https://git.sr.ht/~hadronized/kak-tree-sitter %{
-        eval %sh{ kak-tree-sitter -dks --init "$kak_session" --with-highlighting --with-text-objects -vvv }
-        colorscheme catppuccin-mocha
-
-        define-command -override tree-sitter-user-after-highlighter %{
-                add-highlighter -override buffer/show-matching show-matching -previous
-        }
-
-        set-face global PrimaryCursor +r
-        set-face global SecondaryCursor +rd
-        set-face global PrimarySelection default,bright-black
-        set-face global SecondarySelection default,bright-black+d
-        set-face global PrimaryCursorEol black,blue
-        set-face global SecondaryCursorEol black,blue
-        set-face global MenuForeground "black,%opt{mauve}"
-        set-face global MenuInfo "%opt{green},black"
-        set-face global Information "%opt{orange},default"
-        set-face global StatusLine "%opt{mauve},rgb:1e2030"
-        set-face global StatusLineMode "%opt{green}"
-        set-face global StatusLineInfo "%opt{teal}"
-        set-face global StatusLineValue "%opt{orange}"
-        set-face global StatusCursor "black,%opt{mauve}"
-        set-face global Prompt "%opt{orange}"
-        set-face global InlayHint black+i
-        set-face global InlayCodeLens comment
-        set-face global DiagnosticInfo "%opt{blue}"
-        set-face global DiagnosticHint "%opt{mauve}"
-        set-face global DiagnosticWarning "%opt{orange}"
-        set-face global DiagnosticError "%opt{red}"
-}
-
-bundle-install-hook kak-tree-sitter %{
-        cargo install --locked --force --path ./kak-tree-sitter
-        cargo install --locked --force --path ./ktsctl
-}
-
-# ell ess pee
-bundle kak-lsp https://github.com/kak-lsp/kak-lsp %{
-	map -docstring 'enter lsp mode' global user l ':enter-user-mode lsp<ret>'
-
-        hook global WinSetOption filetype=(luau) %{
-                lsp-enable-window
-
-                lsp-auto-signature-help-enable
-                lsp-inlay-hints-enable global
-                lsp-inlay-diagnostics-enable global
-                lsp-inlay-code-lenses-enable global
-                lsp-inline-diagnostics-disable global
-                lsp-diagnostic-lines-disable global
-                set-option global lsp_hover_anchor true
-                set-option global lsp_auto_show_code_actions true
-
-                # yeah youre better off just doing this in a script
-                set-option window formatcmd "stylua %val{buffile} --stdin-filepath=%val{buffile} -"
-                set-option buffer lintcmd %{ selene --color="never" --display-style="quiet" }
-                set-option buffer comment_line "--"
-
-                hook buffer BufWritePre .* %{ format }
-                hook buffer BufWritePost .* %{ lint }
-        }
-
-        hook global KakEnd .* lsp-exit
-
-        define-command -docstring 'Update luau lsp files' -params 0 luau-lsp-update-files %{
-                  eval %sh{
-                            INSTALL_DIRECTORY="$HOME/.local/share/kak/luau-lsp"
-
-                            if [ ! -d "$INSTALL_DIRECTORY" ]; then
-                                      mkdir -p $INSTALL_DIRECTORY
-                            fi
-
-                            curl -o $INSTALL_DIRECTORY/globalTypes.d.luau https://raw.githubusercontent.com/JohnnyMorganz/luau-lsp/main/scripts/globalTypes.d.luau
-                            curl -o $INSTALL_DIRECTORY/api-docs.json https://raw.githubusercontent.com/MaximumADHD/Roblox-Client-Tracker/roblox/api-docs/en-us.json
-                            lune setup
-                  }
-        }
-
-        define-command -docstring 'run rojo shit' -params 0 rojo-setup %{
-                tmux-terminal-window 'tmux split-window -hf "rojo serve"; rojo sourcemap default.project.json -o sourcemap.json --watch'
-        }
-}
-
-bundle-install-hook kak-lsp %{
-        cargo install --locked --force --path .
-}

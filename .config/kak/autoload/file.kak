@@ -1,0 +1,1 @@
+/usr/share/kak/rc/detection/file.kak

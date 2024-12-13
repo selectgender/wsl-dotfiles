@@ -227,7 +227,7 @@ $env.config = {
     }
 
     color_config: $dark_theme # if you want a more interesting theme, you can replace the empty record with `$dark_theme`, `$light_theme` or another custom record
-    use_grid_icons: true
+    # use_grid_icons: true
     footer_mode: 25 # always, never, number_of_rows, auto
     float_precision: 2 # the precision for displaying floats in tables
     buffer_editor: null # command that will be used to edit the current line buffer with ctrl+o, if unset fallback to $env.EDITOR and $env.VISUAL
@@ -899,7 +899,7 @@ $env.config = {
 }
 
 # aliases
-alias e = emacsclient -nw
+# alias e = emacsclient -nw
 
 # starship :)
 use ~/.cache/starship/init.nu
@@ -913,5 +913,9 @@ $env.PATH = (
   | split row (char esep)
   | append ($env.HOME | path join .cargo bin)
   | append ($env.HOME | path join .rokit bin)
+  | append ($env.HOME | path join scripts)
   | uniq # filter so the paths are unique
 )
+
+# other env vars
+$env.EDITOR = "kak"
