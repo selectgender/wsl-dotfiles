@@ -64,6 +64,7 @@ nop %sh{
 	rc_import "filetype/lua.kak" "lua.kak"
 	rc_import "filetype/asciidoc.kak" "asciidoc.kak"
 	rc_import "filetype/odin.kak" "odin.kak"
+	rc_import "filetype/diff.kak" "diff.kak"
 }
 
 require-module zellij
@@ -134,4 +135,5 @@ map -docstring 'git status' global git s ':git status<ret>'
 map -docstring 'git reset' global git r ':git reset<ret>'
 map -docstring 'git commit' global git c ':git commit '
 map -docstring 'git checkout' global git C ':git checkout '
-
+map -docstring 'git log' global git l ':git log<ret>'
+map -docstring 'git diff' global git d ':git diff<ret>'
