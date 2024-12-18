@@ -4,13 +4,67 @@ the kakoune configuration of a crazy witch
 
 = why kakoune?
 
-. emacs is cool, just too big
-. vim is cool, i just like kakoune multicursor better
-. configuration style is, mwah, chef's kiss beautiful
+- emacs is cool, just too big
+- vim is cool, i just like kakoune multicursor better
+- configuration style is, mwah, chef's kiss beautiful
 
 = sensibilities
 
-. insert mode snippets are fucking FAST and SEXY
-. jump mode is fucking FAST and SEXY
-. lsp is... SEXY... but slow,,, as fuck
-. treesitter is SEXY.... but i dont need fancy highlighting
+- insert mode snippets are fucking FAST and SEXY
+- lsp is... SEXY... but slow,,, as fuck
+- treesitter is SEXY.... but i dont need fancy highlighting
+- speed and mneumonics should be balanced
+- modifier keys should generally be avoided
+
+= quality of life
+
+- jk to escape
+- tab and s-tab for completion window
+- only importing necessary default modules
+- <c-w> to delete word (vim instincts)
+- switched alt and shift for many keybinds
+- moved <a-i> and <a-a> to , and .
+- esc clears selections
+- <a-;> is now '
+- m and M do <c-d> and <c-u>
+
+= user mode
+
+- y for system clipboard
+- c for commenting
+- t to open yazi filetree
+- f now searches entire directory of files
+- s does grep search
+- w does window mode
+-- s splt down
+-- v split left
+-- hjkl for different window focus
+- b does buffer mode
+-- n for next
+-- p for previous
+-- s for buffer search
+-- d for buffer delete
+- g does git mode
+-- a for add
+-- A for add all
+-- s for status
+-- r for reset
+-- c for commit
+-- C for checkout
+-- l for log
+-- d for diff
+
+== language mode
+
+these will usually be enabled for specific filetypes,
+but they will generally follow this convention
+
+- l does language mode
+-- c to compile
+-- r to run
+
+= custom scripts
+
+- git signs implementation stolen from hadronized
+- highlighting for luau and nushell
+- insert mode snippets that steals from kkga and occivink

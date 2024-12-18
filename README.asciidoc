@@ -1,0 +1,11 @@
+= crazy witch's development files
+
+all these tools
+
+all this fancy configuration..
+
+just to make shitty lego games
+
+just as god intended
+
+(btw, there are three different text editors configured here... i only use kakoune)

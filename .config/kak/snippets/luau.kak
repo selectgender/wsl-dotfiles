@@ -36,10 +36,13 @@ set -add buffer snippets ',C' \
 ]]};
 
 set -add buffer snippets '/p' "print("
+set -add buffer snippets '/w' "warn("
 set -add buffer snippets '/g' %{game:GetService("}
 set -add buffer snippets '/i' %{Instance.new("}
+
 set -add buffer snippets '/ti' "table.insert("
 set -add buffer snippets '/tr' "table.remove("
+set -add buffer snippets '/tf' "table.find("
 
 set -add buffer snippets '/vn' "Vector3.new($1, $2, $3)"
 set -add buffer snippets '/vz' "Vector3.zero"

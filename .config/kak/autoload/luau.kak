@@ -2,19 +2,10 @@ define-command rojo-setup %{
 	zellij-action new-tab -l rojo
 }
 
-define-command install-roblox-definitions %{
-	eval %sh{
-		mkdir -p /home/ivy/.local/share/kak/luau
-		curl -o /home/ivy/.local/share/kak/luau/globalTypes.d.luau https://raw.githubusercontent.com/JohnnyMorganz/luau-lsp/main/scripts/globalTypes.d.luau
-	}
-}
-
-# writes to *debug* as shell error!
-define-command luau-analyze %{
-	eval %sh{
-		luau-lsp analyze --definitions=/home/ivy/.local/share/kak/luau/globalTypes.d.luau \
-				 --base-luaurc=src/.luaurc --sourcemap=sourcemap.json \
-				 --no-strict-dm-types $kak_buffile
+# requires you to have an external lune analyze script
+define-command lune-analyze %{
+	nop %sh{
+		zellij run -- lune run analyze
 	}
 }
 
@@ -37,6 +28,8 @@ hook global WinSetOption filetype=luau %{
 
 	hook buffer BufWritePre .* %{ format }
 	hook buffer BufWritePost .* %{ lint }
+
+	map -docstring 'runs lune analyze script' buffer language a ':lune-analyze<ret>'
 }
 
 provide-module luau %§
@@ -52,8 +45,8 @@ provide-module luau %§
 	add-highlighter shared/luau/code/variable regex \b\w*\b 0:variable # Everything in Lua is a variable!
 	add-highlighter shared/luau/code/function_declaration regex \b(?:function\h+)(?:\w+\h*\.\h*)*([a-zA-Z_]\w*)\( 1:function
 	add-highlighter shared/luau/code/function_call regex \b([a-zA-Z_]\w*)\h*(?=[\(\{]) 1:function
-	add-highlighter shared/luau/code/keyword regex \b(break|do|else|elseif|end|for|function|if|in|local|repeat|return|then|until|while|type)\b 0:keyword
-	add-highlighter shared/luau/code/type regex \b(nil|string|number|boolean|thread|userdata|vector|buffer)\b 0:type
+	add-highlighter shared/luau/code/keyword regex \b(break|continue|do|else|elseif|end|export|for|function|if|in|local|repeat|return|then|until|while|type)\b 0:keyword
+	add-highlighter shared/luau/code/type regex \b(any|nil|string|number|boolean|thread|userdata|vector|buffer)\b 0:type
 	add-highlighter shared/luau/code/value regex \b(false|nil|true|self|[0-9]+(:?\.[0-9])?(:?[eE]-?[0-9]+)?|0x[0-9a-fA-F])\b 0:value
 	add-highlighter shared/luau/code/symbolic_operator regex (\+|-|\*|/|%|\^|==?|~=|<=?|>=?|\.\.|\.\.\.|#) 0:operator
 	add-highlighter shared/luau/code/keyword_operator regex \b(and|or|not)\b 0:operator
