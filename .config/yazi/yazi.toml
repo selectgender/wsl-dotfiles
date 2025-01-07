@@ -1,8 +1,0 @@
-[opener]
-edit = [
-	{ run = 'kak "$@"', block = true, for = "unix" },
-	{ run = "kak %*",   block = true, for = "windows" },
-]
-
-[manager]
-show_hidden = true
