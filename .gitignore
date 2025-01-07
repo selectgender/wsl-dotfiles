@@ -1,12 +1,3 @@
 .config/tmux/plugins/
 
-.config/kak/bundle
-
-.config/emacs/auto-save-list/
-.config/emacs/eln-cache/
-.config/emacs/elpaca/
-.config/emacs/projects
-
-.config/helix/runtime
-
-.config/nushell/history.txt
+.config/broot/launcher/

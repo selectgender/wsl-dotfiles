@@ -16,6 +16,10 @@ set-option global scrolloff 0,3
 
 set-option -add global ui_options terminal_status_on_top=true
 set-option -add global ui_options terminal_assistant=none
+set-option -add global ui_options terminal_set_title=no
+
+# AUR kak doesn't have this option yet :(
+# set-option -add global ui_options terminal_title='kak'
 
 # jk to escape
 hook global InsertChar k %{
@@ -46,7 +50,7 @@ nop %sh{
 		[ ! -e $kak_config/autoload/$2 ] && ln -s "$kak_runtime/rc/$1" "$kak_config/autoload/$2"
 	}
 
-	rc_import "windowing/zellij.kak" "zellij.kak"
+	rc_import "windowing/tmux.kak" "tmux.kak"
 
 	rc_import "tools/comment.kak" "comment.kak"
 	rc_import "tools/git.kak" "git.kak"
@@ -69,38 +73,64 @@ nop %sh{
 	rc_import "filetype/json.kak" "json.kak"
 }
 
-require-module zellij
-require-module grep
+# apparently grep automatically imports for you! how sweet!
+require-module tmux
 
 # vim reflexes
 map global insert <c-w> '<esc>:execute-keys bd<ret>i'
+map global insert <c-h> '<esc>:execute-keys hd<ret>i'
 
-# i swap when i use the alt keybind more than the shift one
-map global normal <s-n> "<a-n>"
-map global normal <a-n> "<s-n>"
+# i dont find much use on some of the default keys so here are my replacements!
+map global normal m "<c-d>"
+map global normal M "<c-u>"
 
-map global normal S "<a-s>"
-map global normal <a-s> "S"
-
-map global normal ? '<a-/>'
-map global normal <a-/> '?'
-
-map global normal F "<a-f>"
-map global normal <a-f> "F"
+map global normal q "[p"
+map global normal e "]p"
+map global normal Q "{p"
+map global normal E "}p"
 
 map global normal <esc> ";,"
 map global normal , "<a-i>"
 map global normal . "<a-a>"
 map global normal "'" "<a-;>"
 
-map global normal m "<c-d>"
-map global normal M "<c-u>"
+map global normal "z" '<a-.>'
+map global normal "Z" '.'
+
+# plagiarize emacs god-mode hehehehehehe
+declare-user-mode alt
+map global normal v ':enter-user-mode alt<ret>'
+map global alt n '<a-n>'
+map global alt s '<a-s>'
+map global alt / '<a-/>'
+map global alt f '<a-f>'
+map global alt t '<a-t>'
+map global alt k '<a-k>'
+map global alt u '<a-u>'
+map global alt o '<a-o>'
+map global alt p '<a-p>'
+map global alt , '<a-,>'
+
+declare-user-mode altshift
+map global normal V ':enter-user-mode altshift<ret>'
+map global altshift n '<a-N>'
+map global altshift / '<a-?>'
+map global altshift f '<a-F>'
+map global altshift t '<a-T>'
+map global altshift k '<a-K>'
+map global altshift u '<a-U>'
+map global altshift o '<a-O>'
+map global altshift 9 '<a-(>'
+map global altshift 0 '<a-)>'
+map global altshift c '<a-C>'
 
 # for wsl
 map -docstring 'copy to system clipboard' global user y '<a-|>clip.exe<ret>'
 map -docstring 'comment line' global user c ':comment-line<ret>'
 
-map -docstring 'open yazi (filetree)' global user t ':zellij-action new-pane -fc -- yazi<ret>'
+map -docstring 'open broot (filetree)' global user t ':tmux-terminal-window broot<ret>'
+map -docstring 'open gitui' global user g ':tmux-terminal-window gitui<ret>'
+map -docstring 'global find/replace' global user r ':tmux-terminal window rgr '
 
 set-option global grepcmd 'rg --column --smart-case --sort path --vimgrep'
 complete-command edit shell-script-candidates %{ fd . --type f }
@@ -110,12 +140,8 @@ map -docstring 'global search/grep' global user s ':grep '
 
 declare-user-mode window
 map -docstring 'enter window mode' global user w ':enter-user-mode window<ret>'
-map -docstring 'split vertical' global window s ':zellij-action new-pane -cd down -- kak -c %val{session} -e "%arg{@}"<ret>'
-map -docstring 'split horizontal' global window v ':zellij-action new-pane -cd left -- kak -c %val{session} -e "%arg{@}"<ret>'
-map -docstring 'focus left' global window h ':zellij-action move-focus left<ret>'
-map -docstring 'focus down' global window j ':zellij-action move-focus down<ret>'
-map -docstring 'focus up' global window k ':zellij-action move-focus up<ret>'
-map -docstring 'focus right' global window l ':zellij-action move-focus right<ret>'
+map -docstring 'split vertical' global window s ':tmux-terminal-vertical kak -c %val{session}<ret>'
+map -docstring 'split horizontal' global window v ':tmux-terminal-horizontal kak -c %val{session}<ret>'
 
 declare-user-mode buffer
 map -docstring 'enter buffer mode' global user b ':enter-user-mode buffer<ret>'
@@ -123,17 +149,6 @@ map -docstring 'next buffer' global buffer n ':buffer-next<ret>'
 map -docstring 'next buffer' global buffer p ':buffer-previous<ret>'
 map -docstring 'buffer search' global buffer s ':buffer '
 map -docstring 'delete buffer' global buffer d ':delete-buffer<ret>'
-
-declare-user-mode git
-map -docstring 'enter git mode' global user g ':enter-user-mode git<ret>'
-map -docstring 'git add' global git a ':git add '
-map -docstring 'git add all' global git A ':git add -A<ret>'
-map -docstring 'git status' global git s ':git status<ret>'
-map -docstring 'git reset' global git r ':git reset<ret>'
-map -docstring 'git commit' global git c ':git commit '
-map -docstring 'git checkout' global git C ':git checkout '
-map -docstring 'git log' global git l ':git log<ret>'
-map -docstring 'git diff' global git d ':git diff<ret>'
 
 # this mode will be edited in buffer scope by individual filetypes
 declare-user-mode language

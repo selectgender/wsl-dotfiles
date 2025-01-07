@@ -50,6 +50,8 @@ set -add buffer snippets '\\ti' "table.insert("
 set -add buffer snippets '\\tr' "table.remove("
 set -add buffer snippets '\\tf' "table.find("
 
+set -add buffer snippets '\\sf' "string.find("
+
 set -add buffer snippets '\\vn' "Vector3.new($1, $2, $3)"
 set -add buffer snippets '\\vz' "Vector3.zero"
 set -add buffer snippets '\\vo' "Vector3.one"
