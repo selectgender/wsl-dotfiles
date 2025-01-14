@@ -1,11 +1,13 @@
 define-command rojo-setup %{
-	zellij-action new-tab -l rojo
+	nop %sh{
+		tmux new-window "lune run serve"
+	}
 }
 
-# requires you to have an external lune analyze script
+# requires you to have a separate analysis script
 define-command lune-analyze %{
 	nop %sh{
-		zellij run -- lune run analyze
+		tmux split-window "while true; do lune run analyze; read -s -k '?Press any key to reanalyze'; clear; done"
 	}
 }
 
@@ -22,12 +24,7 @@ hook global WinSetOption filetype=luau %{
 
 	source '~/.config/kak/snippets/luau.kak'
 
-	set-option window formatcmd "stylua %val{buffile} --stdin-filepath=%val{buffile} -"
-	set-option buffer lintcmd %{ selene --color="never" --display-style="quiet" }
 	set-option buffer comment_line "--"
-
-	hook buffer BufWritePre .* %{ format }
-	hook buffer BufWritePost .* %{ lint }
 
 	map -docstring 'runs lune analyze script' buffer language a ':lune-analyze<ret>'
 }

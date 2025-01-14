@@ -6,15 +6,14 @@ fi
 source ~/.zpm/zpm.zsh
 
 # everyone's favs
-zpm load zsh-users/zsh-syntax-highlighting
 zpm load zsh-users/zsh-completions
 zpm load zsh-users/zsh-autosuggestions
 
-# fzf,,, EVERYWHERE!
-zpm load Aloxaf/fzf-tab
-
 # load the autocomplete
 autoload -U compinit && compinit
+
+# fzf,,, EVERYWHERE!
+zpm load Aloxaf/fzf-tab
 
 # COMPLETION STYLES!!
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
@@ -32,3 +31,14 @@ eval "$(zoxide init --cmd cd zsh)"
 eval "$(fzf --zsh)"
 
 source /home/ivy/.config/broot/launcher/bash/br
+
+# catppuccin mocha colorscheme for fzf :3
+export FZF_DEFAULT_OPTS=" \
+--color=bg+:#313244,bg:#1e1e2e,spinner:#f5e0dc,hl:#f38ba8 \
+--color=fg:#cdd6f4,header:#f38ba8,info:#cba6f7,pointer:#f5e0dc \
+--color=marker:#b4befe,fg+:#cdd6f4,prompt:#cba6f7,hl+:#f38ba8 \
+--color=selected-bg:#45475a \
+--multi"
+
+# everyone's fav's... but respect the loading order
+zpm load zsh-users/zsh-syntax-highlighting

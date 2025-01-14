@@ -148,3 +148,10 @@ hook global WinCreate .+ %{
 		}
 	}
 }
+
+# dont mind me,,, just mystical undocumented boilerplate that loads some
+# snippets!
+
+hook global WinSetOption filetype=asciidoc %{
+	source '~/.config/kak/snippets/asciidoc.kak'
+}

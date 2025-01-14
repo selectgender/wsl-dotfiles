@@ -53,14 +53,6 @@ nop %sh{
 	rc_import "windowing/tmux.kak" "tmux.kak"
 
 	rc_import "tools/comment.kak" "comment.kak"
-	rc_import "tools/git.kak" "git.kak"
-	# for some reason the symlink process for this is just satanic and cursed,,, so i decided to comment it out
-	# rc_import "tools/fifo.kak" "fifo.kak"
-	rc_import "tools/grep.kak" "grep.kak"
-	rc_import "tools/jump.kak" "jump.kak"
-	rc_import "tools/format.kak" "format.kak"
-	rc_import "tools/lint.kak" "lint.kak"
-
 	rc_import "detection/file.kak" "file.kak"
 
 	rc_import "filetype/sh.kak" "sh.kak"
@@ -68,7 +60,6 @@ nop %sh{
 	rc_import "filetype/lua.kak" "lua.kak"
 	rc_import "filetype/asciidoc.kak" "asciidoc.kak"
 	rc_import "filetype/odin.kak" "odin.kak"
-	rc_import "filetype/diff.kak" "diff.kak"
 	rc_import "filetype/toml.kak" "toml.kak"
 	rc_import "filetype/json.kak" "json.kak"
 }
@@ -81,6 +72,11 @@ map global insert <c-w> '<esc>:execute-keys bd<ret>i'
 map global insert <c-h> '<esc>:execute-keys hd<ret>i'
 
 # i dont find much use on some of the default keys so here are my replacements!
+map global normal <esc> ";,"
+map global normal , "<a-i>"
+map global normal . "<a-a>"
+map global normal "'" "<a-;>"
+
 map global normal m "<c-d>"
 map global normal M "<c-u>"
 
@@ -88,11 +84,6 @@ map global normal q "[p"
 map global normal e "]p"
 map global normal Q "{p"
 map global normal E "}p"
-
-map global normal <esc> ";,"
-map global normal , "<a-i>"
-map global normal . "<a-a>"
-map global normal "'" "<a-;>"
 
 map global normal "z" '<a-.>'
 map global normal "Z" '.'
@@ -132,23 +123,15 @@ map -docstring 'open broot (filetree)' global user t ':tmux-terminal-window broo
 map -docstring 'open gitui' global user g ':tmux-terminal-window gitui<ret>'
 map -docstring 'global find/replace' global user r ':tmux-terminal window rgr '
 
-set-option global grepcmd 'rg --column --smart-case --sort path --vimgrep'
-complete-command edit shell-script-candidates %{ fd . --type f }
-
-map -docstring 'find files' global user f ':edit '
-map -docstring 'global search/grep' global user s ':grep '
+# imported from autoload/fuzzy.kak
+map -docstring 'find files' global user f ':fuzzy-edit<ret>'
+map -docstring 'global search/grep' global user s ':fuzzy-grep<ret>'
+map -docstring 'buffer search' global user b ':fuzzy-buffer<ret>'
 
 declare-user-mode window
 map -docstring 'enter window mode' global user w ':enter-user-mode window<ret>'
 map -docstring 'split vertical' global window s ':tmux-terminal-vertical kak -c %val{session}<ret>'
 map -docstring 'split horizontal' global window v ':tmux-terminal-horizontal kak -c %val{session}<ret>'
-
-declare-user-mode buffer
-map -docstring 'enter buffer mode' global user b ':enter-user-mode buffer<ret>'
-map -docstring 'next buffer' global buffer n ':buffer-next<ret>'
-map -docstring 'next buffer' global buffer p ':buffer-previous<ret>'
-map -docstring 'buffer search' global buffer s ':buffer '
-map -docstring 'delete buffer' global buffer d ':delete-buffer<ret>'
 
 # this mode will be edited in buffer scope by individual filetypes
 declare-user-mode language

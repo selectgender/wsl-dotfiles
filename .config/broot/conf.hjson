@@ -26,11 +26,6 @@ verbs: [
 		external: "cp -r {directory}/* {dest}"
 		from_shell: true
 	}
-
-	{
-		key: enter
-		execution: ":escape"
-	}
 ]
 
 imports: [
