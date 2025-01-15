@@ -41,8 +41,9 @@ set -add buffer snippets ',C' \
 	$1
 ]]};
 
-set -add buffer snippets '\\p' "print("
-set -add buffer snippets '\\w' "warn("
+set -add buffer snippets '\\p' 'print("'
+set -add buffer snippets '\\w' 'warn("'
+set -add buffer snippets '\\e' 'error("'
 set -add buffer snippets '\\g' %{game:GetService("}
 set -add buffer snippets '\\i' %{Instance.new("}
 

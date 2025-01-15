@@ -78,9 +78,5 @@ evaluate-commands %sh{
         set-face global documentation comment
         set-face global meta          ${yellow}
         set-face global builtin       ${red}
-
-        # extra jumpmode shit
-
-	set-face global JumpLabel '${base},${red}+F'
 "
 }

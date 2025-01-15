@@ -88,32 +88,9 @@ map global normal E "}p"
 map global normal "z" '<a-.>'
 map global normal "Z" '.'
 
-# plagiarize emacs god-mode hehehehehehe
-declare-user-mode alt
-map global normal v ':enter-user-mode alt<ret>'
-map global alt n '<a-n>'
-map global alt s '<a-s>'
-map global alt / '<a-/>'
-map global alt f '<a-f>'
-map global alt t '<a-t>'
-map global alt k '<a-k>'
-map global alt u '<a-u>'
-map global alt o '<a-o>'
-map global alt p '<a-p>'
-map global alt , '<a-,>'
-
-declare-user-mode altshift
-map global normal V ':enter-user-mode altshift<ret>'
-map global altshift n '<a-N>'
-map global altshift / '<a-?>'
-map global altshift f '<a-F>'
-map global altshift t '<a-T>'
-map global altshift k '<a-K>'
-map global altshift u '<a-U>'
-map global altshift o '<a-O>'
-map global altshift 9 '<a-(>'
-map global altshift 0 '<a-)>'
-map global altshift c '<a-C>'
+# defined in autoload/god-mode.kak
+map global normal v ':enter-user-mode god-mode-alt<ret>'
+map global normal V ':enter-user-mode god-mode-hold-alt<ret>'
 
 # for wsl
 map -docstring 'copy to system clipboard' global user y '<a-|>clip.exe<ret>'

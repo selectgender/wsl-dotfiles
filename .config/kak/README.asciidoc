@@ -46,7 +46,6 @@ the kakoune configuration of a crazy witch
 * w does window mode
 ** s splt down
 ** v split left
-** hjkl for different window focus
 * b does buffer mode
 ** n for next
 ** p for previous

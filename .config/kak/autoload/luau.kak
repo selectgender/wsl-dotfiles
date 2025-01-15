@@ -1,4 +1,4 @@
-define-command rojo-setup %{
+define-command lune-serve %{
 	nop %sh{
 		tmux new-window "lune run serve"
 	}
@@ -27,6 +27,7 @@ hook global WinSetOption filetype=luau %{
 	set-option buffer comment_line "--"
 
 	map -docstring 'runs lune analyze script' buffer language a ':lune-analyze<ret>'
+	map -docstring 'runs lune analyze script' buffer language s ':lune-serve<ret>'
 }
 
 provide-module luau %§
