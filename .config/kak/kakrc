@@ -86,6 +86,7 @@ map global normal E "}p"
 
 # defined in autoload/god-mode.kak
 map global normal v ':enter-user-mode god-mode<ret>'
+god-mode-activate-mappings
 
 # for wsl
 map -docstring 'copy to system clipboard' global user y '<a-|>clip.exe<ret>'
