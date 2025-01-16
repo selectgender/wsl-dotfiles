@@ -51,7 +51,6 @@ nop %sh{
 	}
 
 	rc_import "windowing/tmux.kak" "tmux.kak"
-
 	rc_import "tools/comment.kak" "comment.kak"
 	rc_import "detection/file.kak" "file.kak"
 
@@ -85,12 +84,8 @@ map global normal e "]p"
 map global normal Q "{p"
 map global normal E "}p"
 
-map global normal "z" '<a-.>'
-map global normal "Z" '.'
-
 # defined in autoload/god-mode.kak
-map global normal v ':enter-user-mode god-mode-alt<ret>'
-map global normal V ':enter-user-mode god-mode-hold-alt<ret>'
+map global normal v ':enter-user-mode god-mode<ret>'
 
 # for wsl
 map -docstring 'copy to system clipboard' global user y '<a-|>clip.exe<ret>'
