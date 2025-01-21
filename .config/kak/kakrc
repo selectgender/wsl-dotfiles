@@ -18,9 +18,6 @@ set-option -add global ui_options terminal_status_on_top=true
 set-option -add global ui_options terminal_assistant=none
 set-option -add global ui_options terminal_set_title=no
 
-# AUR kak doesn't have this option yet :(
-# set-option -add global ui_options terminal_title='kak'
-
 # jk to escape
 hook global InsertChar k %{
 	try %{
@@ -28,6 +25,7 @@ hook global InsertChar k %{
 		exec <esc>
 	}
 }
+
 # tab 4 completion window
 hook global InsertCompletionShow .* %{
 	try %{
@@ -68,16 +66,12 @@ require-module tmux
 
 # vim reflexes
 map global insert <c-w> '<esc>:execute-keys bd<ret>i'
-map global insert <c-h> '<esc>:execute-keys hd<ret>i'
 
 # i dont find much use on some of the default keys so here are my replacements!
 map global normal <esc> ";,"
+map global normal "'" "<a-;>"
 map global normal , "<a-i>"
 map global normal . "<a-a>"
-map global normal "'" "<a-;>"
-
-map global normal m "<c-d>"
-map global normal M "<c-u>"
 
 map global normal q "[p"
 map global normal e "]p"
@@ -109,3 +103,34 @@ map -docstring 'split horizontal' global window v ':tmux-terminal-horizontal kak
 # this mode will be edited in buffer scope by individual filetypes
 declare-user-mode language
 map -docstring 'enter language mode' global user l ':enter-user-mode language<ret>'
+
+# language specific stuffz :P
+
+# these 2 luau-lune functions require external lune scripts for servig and
+# analysis! why? idfk it just feels nice LOL
+define-command luau-lune-serve %{
+	nop %sh{
+		tmux new-window "lune run serve"
+	}
+}
+
+define-command luau-lune-analyze %{
+	nop %sh{
+		tmux split-window "while true; do lune run analyze; read -s -k '?Press any key to reanalyze'; clear; done"
+	}
+}
+
+hook global WinSetOption filetype=asciidoc %{
+	source '~/.config/kak/snippets/asciidoc.kak'
+}
+
+hook global WinSetOption filetype=odin %{
+	source '~/.config/kak/snippets/odin.kak'
+}
+
+hook global WinSetOption filetype=luau %{
+	source '~/.config/kak/snippets/luau.kak'
+
+	map -docstring 'runs lune analyze script' buffer language a ':luau-lune-analyze<ret>'
+	map -docstring 'runs lune analyze script' buffer language s ':luau-lune-serve<ret>'
+}

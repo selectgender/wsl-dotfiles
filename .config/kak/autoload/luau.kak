@@ -1,16 +1,3 @@
-define-command lune-serve %{
-	nop %sh{
-		tmux new-window "lune run serve"
-	}
-}
-
-# requires you to have a separate analysis script
-define-command lune-analyze %{
-	nop %sh{
-		tmux split-window "while true; do lune run analyze; read -s -k '?Press any key to reanalyze'; clear; done"
-	}
-}
-
 hook global BufCreate .*[.](luau) %{
 	set-option buffer filetype luau
 }
@@ -22,12 +9,7 @@ hook global WinSetOption filetype=luau %{
 	add-highlighter window/luau ref luau
 	hook -once -always window WinSetOption filetype=.* %{ remove-highlighter window/luau }
 
-	source '~/.config/kak/snippets/luau.kak'
-
 	set-option buffer comment_line "--"
-
-	map -docstring 'runs lune analyze script' buffer language a ':lune-analyze<ret>'
-	map -docstring 'runs lune analyze script' buffer language s ':lune-serve<ret>'
 }
 
 provide-module luau %§

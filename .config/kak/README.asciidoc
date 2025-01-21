@@ -23,7 +23,6 @@ the kakoune configuration of a crazy witch
 * tab and s-tab for completion window
 * only importing necessary default modules
 * <c-w> to delete word (vim instincts)
-* <c-h> to backspace (vim instincts)
 * did an emacs god-mode and binded v and V to alt and alt-shift shortcuts
 ** because before that my thumbs contorted in truly terrible ways
 ** alt is used by GlazeWM anyways
