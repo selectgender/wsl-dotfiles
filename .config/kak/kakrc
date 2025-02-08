@@ -1,3 +1,15 @@
+#
+# kakrc
+#
+# crazy witch's kakoune config
+#
+
+#
+# common sense options
+#
+# usually borrowed from other resources and configs
+#
+
 colorscheme catppuccin-mocha
 
 add-highlighter global/ number-lines -hlcursor -relative -separator " "
@@ -17,6 +29,12 @@ set-option global scrolloff 0,3
 set-option -add global ui_options terminal_status_on_top=true
 set-option -add global ui_options terminal_assistant=none
 set-option -add global ui_options terminal_set_title=no
+
+#
+# additional hooks
+#
+# also more sane options, anyone who doesnt like these are utterly deranged
+#
 
 # jk to escape
 hook global InsertChar k %{
@@ -39,7 +57,12 @@ hook global InsertCompletionShow .* %{
 	}
 }
 
-# choosing which standard library stuff I want
+#
+# standard rc import
+#
+# choosing which rc stuff I want
+#
+
 nop %sh{
 	# just checks if the symlink already exists and then symlinks it
 	rc_import() {
@@ -63,8 +86,16 @@ nop %sh{
 # apparently grep automatically imports for you! how sweet!
 require-module tmux
 
+#
+# keymappings
+#
+# that are very satisfying :)
+#
+
 # vim reflexes
 map global insert <c-w> '<esc>:execute-keys bd<ret>i'
+map global normal D '<a-l>d'
+map global normal Y '<a-l>Y'
 
 # i dont find much use on some of the default keys so here are my replacements!
 map global normal <esc> ";,"
@@ -77,19 +108,6 @@ map global normal e "]p"
 map global normal Q "{p"
 map global normal E "}p"
 
-# defined in autoload/jump-mode.kak
-map -docstring 'enter jump mode (select mode: replace)' global normal z ':enter_jump_mode_with_replace_select_mode<ret>'
-map -docstring 'enter jump mode (select mode: extend)' global normal Z ':enter_jump_mode_with_extend_select_mode<ret>'
-map -docstring 'enter jump mode (select mode: append)' global normal <a-z> ':enter_jump_mode_with_append_select_mode<ret>'
-
-# defined in autoload/god-mode.kak
-map global normal v ':enter-user-mode god-mode<ret>'
-
-set-option -add global god_alt_prompt_bindings 'z'
-
-god-mode-activate-mappings
-
-# for wsl
 map -docstring 'copy to system clipboard' global user y '<a-|>clip.exe<ret>'
 map -docstring 'comment line' global user c ':comment-line<ret>'
 
@@ -97,72 +115,25 @@ map -docstring 'open broot (filetree)' global user t ':tmux-terminal-window broo
 map -docstring 'open gitui' global user g ':tmux-terminal-window gitui<ret>'
 map -docstring 'global find/replace' global user r ':tmux-terminal window rgr '
 
-# imported from autoload/fuzzy.kak
+# defined in autoload/fuzzy.kak
 map -docstring 'find files' global user f ':fuzzy-edit<ret>'
 map -docstring 'global search/grep' global user s ':fuzzy-grep<ret>'
 map -docstring 'buffer search' global user b ':fuzzy-buffer<ret>'
 
+#
+# custom modes
+#
+# I LOVE MY EXTERNAL MODES
+#
+
 declare-user-mode window
 map -docstring 'enter window mode' global user w ':enter-user-mode window<ret>'
 map -docstring 'split vertical' global window s ':tmux-terminal-vertical kak -c %val{session}<ret>'
-
 map -docstring 'split horizontal' global window v ':tmux-terminal-horizontal kak -c %val{session}<ret>'
 
-# this mode will be edited in buffer scope by individual filetypes
-declare-user-mode language
+# defined in autoload/language-mode.kak
 map -docstring 'enter language mode' global user l ':enter-user-mode language<ret>'
 
-# language specific stuffz :P
-
-# these 2 luau-lune functions require external lune scripts for servig and
-# analysis! why? idfk it just feels nice LOL
-define-command luau-lune-serve %{
-	nop %sh{
-		tmux new-window "lune run serve"
-	}
-}
-
-define-command luau-lune-analyze %{
-	nop %sh{
-		tmux split-window "while true; do lune run analyze; read -s -k '?Press any key to reanalyze'; clear; done"
-	}
-}
-
-define-command c-compile %{
-	nop %sh{
-		tmux split-window "while true; do gcc $kak_buffile; echo '\n'; read -s -k '?Press any key to rerun'; clear; done"
-	}
-}
-
-define-command c-compile-and-run %{
-	nop %sh{
-		tmux split-window "while true; do gcc $kak_buffile; ./a.out; echo '\n'; read -s -k '?Press any key to rerun'; clear; done"
-	}
-}
-
-define-command cpp-compile %{
-	nop %sh{
-		tmux split-window "while true; do g++ $kak_buffile; echo '\n'; read -s -k '?Press any key to rerun'; clear; done"
-	}
-}
-
-define-command cpp-compile-and-run %{
-	nop %sh{
-		tmux split-window "while true; do g++ $kak_buffile; ./a.out; echo '\n'; read -s -k '?Press any key to rerun'; clear; done"
-	}
-}
-
-hook global WinSetOption filetype=(c) %{
-	map -docstring 'compile' buffer language c ':c-compile<ret>'
-	map -docstring 'compile and run' buffer language r ':c-compile-and-run<ret>'
-}
-
-hook global WinSetOption filetype=(cpp) %{
-	map -docstring 'compile' buffer language c ':cpp-compile<ret>'
-	map -docstring 'compile and run' buffer language r ':cpp-compile-and-run<ret>'
-}
-
-hook global WinSetOption filetype=luau %{
-	map -docstring 'runs lune analyze script' buffer language a ':luau-lune-analyze<ret>'
-	map -docstring 'runs lune analyze script' buffer language s ':luau-lune-serve<ret>'
-}
+# defined in autoload/god-mode.kak
+map global normal v ':enter-user-mode god-mode<ret>'
+god-mode-activate-mappings
