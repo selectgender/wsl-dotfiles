@@ -166,24 +166,3 @@ hook global WinSetOption filetype=luau %{
 	map -docstring 'runs lune analyze script' buffer language a ':luau-lune-analyze<ret>'
 	map -docstring 'runs lune analyze script' buffer language s ':luau-lune-serve<ret>'
 }
-
-# git signs
-# taken from hadronized config: https://git.sr.ht/~hadronized/config/tree/master/item/kak/kakrc
-
-add-highlighter global/git-diff flag-lines Default git_diff_flags
-
-hook global -group git-main-hook BufCreate .* %{
-	try %{ git show-diff }
-}
-
-hook global -group git-main-hook FocusIn .* %{
-	try %{ git update-diff }
-}
-
-hook global -group git-main-hook BufReload .* %{
-	try %{ git update-diff }
-}
-
-hook global -group git-main-hook BufWritePost .* %{
-	try %{ git update-diff }
-}
