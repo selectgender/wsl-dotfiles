@@ -27,19 +27,17 @@ hook global InsertChar k %{
 }
 
 # tab 4 completion window
-# hook global InsertCompletionShow .* %{
-# 	try %{
-# 		execute-keys -draft 'h<a-K>\h<ret>'
-
-# 		map window insert <tab> <c-n>
-# 		map window insert <s-tab> <c-p>
-
-# 		hook -once -always window InsertCompletionHide .* %{
-# 			unmap window insert <tab> <c-n>
-# 			unmap window insert <s-tab> <c-p>
-# 		}
-# 	}
-# }
+hook global InsertCompletionShow .* %{
+	try %{
+		execute-keys -draft 'h<a-K>\h<ret>'
+		map window insert <tab> <c-n>
+		map window insert <s-tab> <c-p>
+		hook -once -always window InsertCompletionHide .* %{
+			unmap window insert <tab> <c-n>
+			unmap window insert <s-tab> <c-p>
+		}
+	}
+}
 
 # choosing which standard library stuff I want
 nop %sh{
@@ -78,9 +76,6 @@ map global normal q "[p"
 map global normal e "]p"
 map global normal Q "{p"
 map global normal E "}p"
-
-# defined in autoload/auto-pairs.kak
-enable-auto-pairs
 
 # defined in autoload/jump-mode.kak
 map -docstring 'enter jump mode (select mode: replace)' global normal z ':enter_jump_mode_with_replace_select_mode<ret>'
@@ -157,31 +152,38 @@ define-command cpp-compile-and-run %{
 	}
 }
 
-hook global WinSetOption filetype=asciidoc %{
-	source '~/.config/kak/snippets/asciidoc.kak'
-}
-
-hook global WinSetOption filetype=odin %{
-	source '~/.config/kak/snippets/odin.kak'
-}
-
 hook global WinSetOption filetype=(c) %{
-	source '~/.config/kak/snippets/c.kak'
-
 	map -docstring 'compile' buffer language c ':c-compile<ret>'
 	map -docstring 'compile and run' buffer language r ':c-compile-and-run<ret>'
 }
 
 hook global WinSetOption filetype=(cpp) %{
-	source '~/.config/kak/snippets/cpp.kak'
-
 	map -docstring 'compile' buffer language c ':cpp-compile<ret>'
 	map -docstring 'compile and run' buffer language r ':cpp-compile-and-run<ret>'
 }
 
 hook global WinSetOption filetype=luau %{
-	source '~/.config/kak/snippets/luau.kak'
-
 	map -docstring 'runs lune analyze script' buffer language a ':luau-lune-analyze<ret>'
 	map -docstring 'runs lune analyze script' buffer language s ':luau-lune-serve<ret>'
+}
+
+# git signs
+# taken from hadronized config: https://git.sr.ht/~hadronized/config/tree/master/item/kak/kakrc
+
+add-highlighter global/git-diff flag-lines Default git_diff_flags
+
+hook global -group git-main-hook BufCreate .* %{
+	try %{ git show-diff }
+}
+
+hook global -group git-main-hook FocusIn .* %{
+	try %{ git update-diff }
+}
+
+hook global -group git-main-hook BufReload .* %{
+	try %{ git update-diff }
+}
+
+hook global -group git-main-hook BufWritePost .* %{
+	try %{ git update-diff }
 }
