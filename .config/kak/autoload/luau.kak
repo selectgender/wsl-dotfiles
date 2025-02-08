@@ -19,8 +19,11 @@ provide-module luau %§
 	add-highlighter shared/luau/raw_comment region -match-capture '--\[(=*)\[' '\](=*)\]' fill comment
 	add-highlighter shared/luau/double_string region '"'   (?<!\\)(?:\\\\)*" fill string
 	add-highlighter shared/luau/single_string region "'"   (?<!\\)(?:\\\\)*' fill string
-	add-highlighter shared/luau/literal       region "`"  (?<!\\)(\\\\)*`    group
-	add-highlighter shared/luau/comment       region '--'  $                 fill comment
+	add-highlighter shared/luau/comment region '--'  $                 fill comment
+
+	add-highlighter shared/luau/literal region "`" (?<!\\)(?:\\\\)*` group
+	add-highlighter shared/luau/literal/ fill string
+	add-highlighter shared/luau/literal/ regex \$\{.*?\} 0:value
 
 	add-highlighter shared/luau/code/variable regex \b\w*\b 0:variable # Everything in Lua is a variable!
 	add-highlighter shared/luau/code/function_declaration regex \b(?:function\h+)(?:\w+\h*\.\h*)*([a-zA-Z_]\w*)\( 1:function

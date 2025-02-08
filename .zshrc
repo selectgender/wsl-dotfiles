@@ -25,10 +25,22 @@ zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
 alias ls='ls --color'
 alias src='source ~/.zshrc'
 
+# i am fucking tired of typing mkdir and cd separately
+# https://unix.stackexchange.com/questions/125385/combined-mkdir-and-cd
+md() {
+	mkdir $1
+	cd $1
+}
+
 # get some cool programs in :)
 eval "$(starship init zsh)"
 eval "$(zoxide init --cmd cd zsh)"
 eval "$(fzf --zsh)"
+
+# add shit to path
+path+=('/home/ivy/.cargo/bin/')
+
+export PATH
 
 source /home/ivy/.config/broot/launcher/bash/br
 

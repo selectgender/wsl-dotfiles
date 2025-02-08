@@ -29,9 +29,7 @@ the kakoune configuration of a crazy witch
 * moved <a-i> and <a-a> to , and .
 * esc clears selections
 * <a-;> is now '
-* m and M do <c-d> and <c-u>
 * q and e are [p and ]p
-* z is now <a-.> and Z is now .
 
 = user mode
 
