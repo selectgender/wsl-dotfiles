@@ -100,13 +100,16 @@ map global normal Y '<a-l>Y'
 # i dont find much use on some of the default keys so here are my replacements!
 map global normal <esc> ";,"
 map global normal "'" "<a-;>"
-map global normal , "<a-i>"
-map global normal . "<a-a>"
+# map global normal , "<a-i>"
+# map global normal . "<a-a>"
 
 map global normal q "[p"
 map global normal e "]p"
 map global normal Q "{p"
 map global normal E "}p"
+
+map global normal m "<c-d>"
+map global normal M "<c-u>"
 
 map -docstring 'copy to system clipboard' global user y '<a-|>clip.exe<ret>'
 map -docstring 'comment line' global user c ':comment-line<ret>'
@@ -114,6 +117,9 @@ map -docstring 'comment line' global user c ':comment-line<ret>'
 map -docstring 'open broot (filetree)' global user t ':tmux-terminal-window broot<ret>'
 map -docstring 'open gitui' global user g ':tmux-terminal-window gitui<ret>'
 map -docstring 'global find/replace' global user r ':tmux-terminal window rgr '
+
+# defined in autoload/expand-region.kak
+map global normal z ":expand<ret>"
 
 # defined in autoload/fuzzy.kak
 map -docstring 'find files' global user f ':fuzzy-edit<ret>'
