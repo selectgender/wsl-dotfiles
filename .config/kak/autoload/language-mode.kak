@@ -1,5 +1,6 @@
 # this mode is intended for individual language functionality
 # whether that be (c)ompiling, (a)nalyzing, or (r)unning
+# this also just sets other arbitratry language specific shit
 
 declare-user-mode language
 
@@ -41,17 +42,23 @@ define-command cpp-compile-and-run %{
 	}
 }
 
-hook global WinSetOption filetype=(c) %{
+hook global WinSetOption filetype=c %{
+	set-option buffer comment_line '//'
+
 	map -docstring 'compile' buffer language c ':c-compile<ret>'
 	map -docstring 'compile and run' buffer language r ':c-compile-and-run<ret>'
 }
 
-hook global WinSetOption filetype=(cpp) %{
+hook global WinSetOption filetype=cpp %{
+	set-option buffer comment_line '//'
+
 	map -docstring 'compile' buffer language c ':cpp-compile<ret>'
 	map -docstring 'compile and run' buffer language r ':cpp-compile-and-run<ret>'
 }
 
 hook global WinSetOption filetype=luau %{
+	set-option buffer comment_line '--'
+
 	map -docstring 'runs lune analyze script' buffer language a ':luau-lune-analyze<ret>'
 	map -docstring 'runs lune analyze script' buffer language s ':luau-lune-serve<ret>'
 }
