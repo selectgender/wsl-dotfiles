@@ -1,0 +1,41 @@
+# luau
+[language.luau.grammar.source.git]
+url = "https://github.com/polychromatist/tree-sitter-luau"
+pin = "40bd6e9733af062d9e60b2c879e0ba4c759c675f"
+
+[language.luau.grammar]
+path = "src"
+compile = "cc"
+compile_args = ["-c", "-fpic", "../scanner.c", "../parser.c", "-I", ".."]
+compile_flags = ["-O3"]
+link = "cc"
+link_args = ["-shared", "-fpic", "scanner.o", "parser.o", "-o", "luau.so"]
+link_flags = ["-O3"]
+
+[language.luau.queries.source.git]
+url = "https://github.com/polychromatist/tree-sitter-luau"
+pin = "40bd6e9733af062d9e60b2c879e0ba4c759c675f"
+
+[language.luau.queries]
+path = "helix-queries"
+
+# asciidoc
+[language.asciidoc.grammar.source.git]
+url = "https://github.com/cathaysia/tree-sitter-asciidoc"
+pin = "a94558880d2d5d51659c1d9c2579f21af273cb3d"
+
+[language.asciidoc.grammar]
+path = "tree-sitter-asciidoc/src"
+compile = "cc"
+compile_args = ["-c", "-fpic", "../scanner.c", "../parser.c", "-I", ".."]
+compile_flags = ["-O3"]
+link = "cc"
+link_args = ["-shared", "-fpic", "scanner.o", "parser.o", "-o", "asciidoc.so"]
+link_flags = ["-O3"]
+
+[language.asciidoc.queries.source.git]
+url = "https://github.com/cathaysia/tree-sitter-asciidoc"
+pin = "a94558880d2d5d51659c1d9c2579f21af273cb3d"
+
+[language.asciidoc.queries]
+path = "tree-sitter-asciidoc/queries"

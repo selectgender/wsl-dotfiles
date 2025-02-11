@@ -56,9 +56,14 @@ hook global WinSetOption filetype=cpp %{
 	map -docstring 'compile and run' buffer language r ':cpp-compile-and-run<ret>'
 }
 
-hook global WinSetOption filetype=luau %{
+hook global BufCreate .*[.](luau) %{
+	set-option buffer filetype luau
 	set-option buffer comment_line '--'
 
 	map -docstring 'runs lune analyze script' buffer language a ':luau-lune-analyze<ret>'
 	map -docstring 'runs lune analyze script' buffer language s ':luau-lune-serve<ret>'
+}
+
+hook global BufCreate .*[.](asciidoc) %{
+	set-option buffer filetype asciidoc
 }
