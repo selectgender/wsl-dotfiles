@@ -67,3 +67,7 @@ hook global BufCreate .*[.](luau) %{
 hook global BufCreate .*[.](asciidoc) %{
 	set-option buffer filetype asciidoc
 }
+
+hook global BufCreate .*[.](toml) %{
+	set-option buffer filetype toml
+}

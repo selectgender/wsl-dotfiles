@@ -56,23 +56,6 @@ hook global InsertCompletionShow .* %{
 }
 
 #
-# standard rc import
-#
-# choosing which rc stuff I want
-#
-
-nop %sh{
-	# just checks if the symlink already exists and then symlinks it
-	rc_import() {
-		[ ! -e $kak_config/autoload/$2 ] && ln -s "$kak_runtime/rc/$1" "$kak_config/autoload/$2"
-	}
-
-	rc_import "detection/file.kak" "file.kak"
-	rc_import "filetype/sh.kak" "sh.kak"
-	rc_import "filetype/kakrc.kak" "kakrc.kak"
-}
-
-#
 # keymappings
 #
 # that are very satisfying :)
